@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import {
+  Dimensions,
   Image,
   Pressable,
   ScrollView,
@@ -10,6 +11,15 @@ import {
   TextInput,
   View,
 } from 'react-native';
+
+const { width } = Dimensions.get('window');
+
+// 'Sans Preferred' সেকশনের জন্য আপনার পোস্টইমেজ ব্যানারগুলোর ডাইরেক্ট লিংক
+const bannerImages = [
+  'https://i.postimg.cc/BQT9cZ0F/Image.jpg',
+  'https://i.postimg.cc/SN6F7QhM/Image-1.jpg',
+  'https://i.postimg.cc/9Fd5tXhF/Image-2.jpg',
+];
 
 const categories = ['All', 'Pizza', 'Burger', 'Sandwich'];
 
@@ -133,12 +143,31 @@ export default function HomeScreen() {
             </View>
           ))}
         </View>
+
+        {/* Sans Preferred Section */}
+        <View style={styles.bannerSectionHeader}>
+          <Text style={styles.sectionTitle}>Sans Preferred</Text>
+        </View>
+
+        <View style={styles.bannerContainer}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.bannerScrollContent}
+          >
+            {bannerImages.map((imgUrl, index) => (
+              <View key={index} style={styles.bannerCard}>
+                <Image source={{ uri: imgUrl }} style={styles.bannerImage} />
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
       </ScrollView>
 
       {/* Floating Custom Bottom Bar */}
       <View style={styles.bottomBarContainer}>
         <View style={styles.bottomBar}>
-          {/* Home Icon */}
           <Pressable
             onPress={() => setActiveTab('home')}
             style={styles.tabItem}
@@ -150,7 +179,6 @@ export default function HomeScreen() {
             />
           </Pressable>
 
-          {/* Love / Heart Icon -> Opens /orders */}
           <Pressable
             onPress={() => {
               setActiveTab('orders');
@@ -165,7 +193,6 @@ export default function HomeScreen() {
             />
           </Pressable>
 
-          {/* Cart Icon -> Opens /cart */}
           <Pressable
             onPress={() => {
               setActiveTab('cart');
@@ -180,7 +207,6 @@ export default function HomeScreen() {
             />
           </Pressable>
 
-          {/* Profile Icon -> Opens /profile */}
           <Pressable
             onPress={() => {
               setActiveTab('profile');
@@ -211,7 +237,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 40,
-    paddingBottom: 110,
+    paddingBottom: 120,
   },
   header: {
     flexDirection: 'row',
@@ -305,6 +331,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
+  bannerSectionHeader: {
+    marginTop: 24,
+    marginBottom: 16,
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
@@ -373,6 +403,31 @@ const styles = StyleSheet.create({
     backgroundColor: '#00C2FF',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  bannerContainer: {
+    marginBottom: 20,
+  },
+  bannerScrollContent: {
+    gap: 14,
+  },
+  bannerCard: {
+    width: 220,
+    height: 390,
+    borderRadius: 20,
+    overflow: 'hidden',
+    backgroundColor: '#F3F4F6',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  bannerImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
   bottomBarContainer: {
     position: 'absolute',
