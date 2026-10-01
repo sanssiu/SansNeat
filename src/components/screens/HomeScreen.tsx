@@ -146,7 +146,7 @@ export const HomeScreen: React.FC = () => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3.5 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-4">
             {filteredFood.map((item) => {
               const favorited = isWishlisted(item.id);
               return (
@@ -208,28 +208,30 @@ export const HomeScreen: React.FC = () => {
       </div>
 
       {/* Sans Preferred Section */}
-      <div className="px-5 mb-3">
+      <div className="px-5 mb-3 flex items-center justify-between">
         <h3 className="text-lg font-bold text-gray-900">Sans Preferred</h3>
       </div>
 
       <div className="mb-6">
-        <div className="flex gap-3.5 px-5 overflow-x-auto no-scrollbar py-1">
+        <div className="flex gap-3.5 px-5 overflow-x-auto no-scrollbar py-2">
           {bannerImages.map((bannerUrl, index) => (
             <div
               key={index}
               onClick={() => setSelectedBanner(index)}
-              className="relative w-56 sm:w-64 h-80 rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 shadow-sm shrink-0 cursor-pointer group hover:shadow-md transition"
+              className="relative w-[220px] h-[390px] rounded-[20px] overflow-hidden bg-gray-100 border border-gray-200/80 shadow-md shrink-0 cursor-pointer group hover:shadow-xl transition-all duration-300"
             >
               <img
                 src={bannerUrl}
-                alt={`Sans Preferred Offer ${index + 1}`}
-                className="w-full h-full object-cover group-hover:scale-103 transition duration-500"
+                alt={`Sans Preferred Reel Thumbnail ${index + 1}`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
-                <span className="inline-block px-2.5 py-0.5 bg-[#00C2FF] text-white text-[10px] font-bold rounded-full w-max mb-1">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent flex flex-col justify-end p-4 text-white">
+                <span className="inline-block px-2.5 py-0.5 bg-[#00C2FF] text-white text-[10px] font-bold rounded-full w-max mb-1.5 shadow-xs">
                   FEATURED
                 </span>
-                <span className="text-sm font-bold leading-snug">Special Offer & Deal #{index + 1}</span>
+                <span className="text-sm font-bold leading-snug drop-shadow-sm">
+                  Special Offer & Deal #{index + 1}
+                </span>
               </div>
             </div>
           ))}
