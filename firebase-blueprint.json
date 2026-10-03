@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "FoodItem": {
+      "title": "Food Item",
+      "description": "Represents a food item available in the restaurant menu",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique food item ID" },
+        "name": { "type": "string", "description": "Name of the dish", "maxLength": 100 },
+        "category": { "type": "string", "description": "Category of food", "maxLength": 50 },
+        "price": { "type": "string", "description": "Formatted price string e.g. $2.50" },
+        "numericPrice": { "type": "number", "description": "Numeric price value" },
+        "image": { "type": "string", "description": "Image URL" },
+        "description": { "type": "string", "description": "Short description", "maxLength": 500 },
+        "rating": { "type": "number", "description": "Rating score" }
+      },
+      "required": ["id", "name", "category", "price", "numericPrice", "image"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Represents a food order placed by a customer",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique order ID" },
+        "username": { "type": "string", "description": "Customer username", "maxLength": 80 },
+        "date": { "type": "string", "description": "Formatted order date string" },
+        "status": { "type": "string", "description": "Order status e.g. Preparing, Delivered", "maxLength": 50 },
+        "total": { "type": "string", "description": "Formatted order total string" },
+        "items": { "type": "string", "description": "Summary of items ordered", "maxLength": 1000 },
+        "image": { "type": "string", "description": "Thumbnail image e.g. first item image" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of creation" }
+      },
+      "required": ["id", "username", "status", "total", "items"]
+    },
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User profile and settings stored in Firestore",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string", "description": "SansCounts Username", "maxLength": 80 },
+        "email": { "type": "string", "description": "User email address", "maxLength": 120 },
+        "firstName": { "type": "string", "description": "First name", "maxLength": 60 },
+        "lastName": { "type": "string", "description": "Last name", "maxLength": 60 },
+        "avatar": { "type": "string", "description": "Avatar image URL" },
+        "updatedAt": { "type": "string", "description": "Last updated ISO timestamp" }
+      },
+      "required": ["username", "email"]
+    },
+    "WishlistItem": {
+      "title": "Wishlist Item",
+      "description": "Saved favorite food item for a user",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string", "description": "SansCounts username", "maxLength": 80 },
+        "foodId": { "type": "string", "description": "ID of favorited food item", "maxLength": 80 },
+        "createdAt": { "type": "string", "description": "ISO timestamp when favorited" }
+      },
+      "required": ["username", "foodId"]
+    }
+  },
+  "firestore": {
+    "/food_items/{foodId}": {
+      "schema": { "$ref": "#/entities/FoodItem" },
+      "description": "Public collection of food items on the menu"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer orders placed"
+    },
+    "/users/{username}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profile definitions"
+    },
+    "/wishlists/{wishlistId}": {
+      "schema": { "$ref": "#/entities/WishlistItem" },
+      "description": "User favorite items"
+    }
+  }
+}

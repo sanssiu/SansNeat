@@ -23,7 +23,7 @@ const MainContent: React.FC = () => {
         </div>
       )}
 
-      {/* Main Container - Automatically responsive: full-width on mobile, desktop-sized on larger screens */}
+      {/* Main Container */}
       <main className="w-full max-w-4xl min-h-screen bg-white relative no-scrollbar sm:shadow-xs sm:border-x sm:border-gray-200/60 overflow-x-hidden">
         {activeTab === 'home' && <HomeScreen />}
         {activeTab === 'cart' && <CartScreen />}

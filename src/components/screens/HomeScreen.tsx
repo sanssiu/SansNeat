@@ -5,7 +5,14 @@ import { categories, bannerImages } from '@/data/mockData';
 import { FoodItem } from '@/types';
 
 export const HomeScreen: React.FC = () => {
-  const { foodItems, addToCart, toggleWishlist, isWishlisted, setActiveTab } = useApp();
+  const {
+    foodItems,
+    addToCart,
+    toggleWishlist,
+    isWishlisted,
+    setActiveTab,
+    user,
+  } = useApp();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
@@ -13,6 +20,16 @@ export const HomeScreen: React.FC = () => {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [maxPrice, setMaxPrice] = useState<number>(10);
   const [selectedBanner, setSelectedBanner] = useState<number | null>(null);
+  const [animatingHearts, setAnimatingHearts] = useState<Record<string, boolean>>({});
+
+  const handleDoubleClick = (e: React.MouseEvent, itemId: string) => {
+    e.stopPropagation();
+    toggleWishlist(itemId);
+    setAnimatingHearts((prev) => ({ ...prev, [itemId]: true }));
+    setTimeout(() => {
+      setAnimatingHearts((prev) => ({ ...prev, [itemId]: false }));
+    }, 800);
+  };
 
   // Filter food items based on category and search query and price
   const filteredFood = useMemo(() => {
@@ -37,18 +54,24 @@ export const HomeScreen: React.FC = () => {
           className="relative rounded-full ring-2 ring-[#00C2FF]/30 hover:ring-[#00C2FF] transition cursor-pointer"
           aria-label="View Profile"
         >
-          <img
-            src="https://i.pravatar.cc/100"
-            alt="User Avatar"
-            className="w-11 h-11 rounded-full object-cover"
-          />
-          <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
+          {user.isConnected && user.avatar ? (
+            <img
+              src={user.avatar}
+              alt={user.firstName}
+              className="w-11 h-11 rounded-full object-cover bg-sky-50"
+            />
+          ) : (
+            <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
+              <span className="text-xs font-bold text-gray-600">Guest</span>
+            </div>
+          )}
+          <span className={`absolute bottom-0 right-0 w-3 h-3 border-2 border-white rounded-full ${user.isConnected ? 'bg-emerald-500' : 'bg-gray-400'}`}></span>
         </button>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowNotifications(true)}
-            className="flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-full shadow-xs hover:bg-gray-50 active:scale-95 transition cursor-pointer"
+            className="flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-full shadow-xs hover:bg-gray-50 active:scale-95 transition cursor-pointer relative"
             aria-label="Notifications"
           >
             <Bell className="w-5 h-5 text-gray-800" />
@@ -152,34 +175,38 @@ export const HomeScreen: React.FC = () => {
               return (
                 <div
                   key={item.id}
-                  className="group relative bg-white rounded-2xl p-3 border border-gray-100 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between"
+                  onDoubleClick={(e) => handleDoubleClick(e, item.id)}
+                  className="group relative bg-white rounded-2xl p-3 border border-gray-100 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between select-none"
+                  title="Double click to favorite!"
                 >
-                  {/* Favorite Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleWishlist(item.id);
-                    }}
-                    className="absolute top-2.5 right-2.5 z-10 w-7 h-7 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-xs text-[#00C2FF] hover:scale-110 active:scale-95 transition shadow-xs cursor-pointer"
-                    aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
-                  >
-                    <Heart
-                      className={`w-4 h-4 ${favorited ? 'fill-[#00C2FF] text-[#00C2FF]' : 'text-[#00C2FF]'}`}
-                    />
-                  </button>
-
                   {/* Card Content & Click to open details */}
                   <div 
                     onClick={() => setSelectedFood(item)}
                     className="cursor-pointer"
                   >
-                    <div className="w-full aspect-4/3 rounded-xl overflow-hidden bg-gray-100 mb-2.5">
+                    <div className="w-full aspect-4/3 rounded-xl overflow-hidden bg-gray-100 mb-2.5 relative">
                       <img
                         src={item.image}
                         alt={item.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         loading="lazy"
                       />
+
+                      {/* Gentle heart status badge (Non-clickable) */}
+                      {favorited && (
+                        <div className="absolute top-2 right-2 z-10 w-6 h-6 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-xs text-[#00C2FF] shadow-xs">
+                          <Heart className="w-3.5 h-3.5 fill-[#00C2FF] text-[#00C2FF]" />
+                        </div>
+                      )}
+
+                      {/* Double click animated pop heart */}
+                      {animatingHearts[item.id] && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/25 z-20 pointer-events-none rounded-xl animate-fade-in">
+                          <div className="animate-ping duration-300">
+                            <Heart className="w-10 h-10 text-white fill-white drop-shadow-md" />
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <h4 className="text-sm font-bold text-gray-900 truncate">
                       {item.name}

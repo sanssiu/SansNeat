@@ -31,7 +31,7 @@ export const WishlistScreen: React.FC = () => {
             </div>
             <h2 className="text-lg font-bold text-gray-800 mb-1">Your wishlist is empty</h2>
             <p className="text-xs text-gray-400 max-w-xs mb-6">
-              Tap the heart icon on any food item to save your favorite dishes here.
+              Double click on any food item card on the home page to save your favorite dishes here.
             </p>
             <button
               onClick={() => setActiveTab('home')}

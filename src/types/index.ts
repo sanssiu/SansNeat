@@ -27,4 +27,14 @@ export interface Order {
   image: string;
 }
 
+export interface SansCountsUser {
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  token?: string;
+  isConnected: boolean;
+}
+
 export type TabType = 'home' | 'orders' | 'cart' | 'profile' | 'wishlist';
